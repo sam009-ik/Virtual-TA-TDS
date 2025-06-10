@@ -1,0 +1,2 @@
+2025-06-09T12:10:46.160Z [ERROR]: Error running database migrations: Error: libnode.so.72: cannot open shared object file: No such file or directory
+2025-06-09T12:10:46.840Z [ERROR]: Error running database migrations: Error: libnode.so.72: cannot open shared object file: No such file or directory

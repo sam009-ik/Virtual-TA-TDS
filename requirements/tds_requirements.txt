@@ -1,0 +1,22 @@
+# TDS Virtual Teaching Assistant - Web Scraping Dependencies
+# Install with: pip install -r requirements.txt
+
+# Web scraping core libraries
+selenium==4.15.2
+beautifulsoup4==4.12.2
+webdriver-manager==4.0.2
+
+# HTTP requests and parsing
+requests==2.31.0
+lxml==4.9.3
+
+# Data handling and export
+pandas==2.1.4
+numpy>=1.26.4
+setuptools>=75.0.1
+# Logging and utilities
+python-dateutil==2.8.2
+
+# Optional: For advanced NLP processing later
+# nltk==3.8.1
+# spacy==3.7.2

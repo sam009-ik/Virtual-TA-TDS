@@ -9,7 +9,7 @@ from chromadb.utils import embedding_functions
 from openai import OpenAI
 from dotenv import load_dotenv
 import uvicorn
-
+from fastapi.middleware.cors import CORSMiddleware
 load_dotenv()
 
 logging.basicConfig(level=logging.INFO)
@@ -24,7 +24,13 @@ openai_ef = embedding_functions.OpenAIEmbeddingFunction(
 )
 
 app = FastAPI(title="TDS Virtual Teaching Assistant", version="1.0.0")
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
 class QuestionRequest(BaseModel):
     question: str
     image: Optional[str] = None

@@ -3,7 +3,7 @@ description: "TDS Virtual TA Project Sample (but not the actual evaluation) Ques
 providers:
   - id: https
     config:
-      url: https://2786-49-36-243-143.ngrok-free.app/api/ # Replace this with your API endpoint
+      url: https://ea29-122-180-188-113.ngrok-free.app/api/ # Replace this with your API endpoint
       method: POST
       headers:
         Content-Type: application/json

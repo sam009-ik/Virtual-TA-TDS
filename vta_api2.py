@@ -17,12 +17,9 @@ logging.basicConfig(level=logging.INFO)
 #logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
-# Remove any proxy settings so the SDK won’t pass them to httpx.Client
-for proxy_var in ("HTTP_PROXY", "HTTPS_PROXY", "http_proxy", "https_proxy"):
-    os.environ.pop(proxy_var, None)
+http_client = httpx.Client(proxies={})
 
-
-openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"), http_client=http_client)
 chroma_client = chromadb.PersistentClient(path="./chroma_db")
 openai_ef = embedding_functions.OpenAIEmbeddingFunction(
     api_key=os.getenv("OPENAI_API_KEY"),

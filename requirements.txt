@@ -1,4 +1,7 @@
 # Virtual Teaching Assistant API Requirements
+# Build tools
+setuptools>=65.0.0
+wheel
 fastapi==0.104.1
 uvicorn==0.24.0
 openai==1.3.0
@@ -12,4 +15,3 @@ urllib3==2.1.0
 
 # System and file handling
 pathlib2==2.3.7
-setuptools>=75.0.1

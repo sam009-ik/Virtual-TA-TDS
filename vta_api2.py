@@ -9,12 +9,18 @@ from chromadb.utils import embedding_functions
 from openai import OpenAI
 from dotenv import load_dotenv
 import uvicorn
+import httpx
 from fastapi.middleware.cors import CORSMiddleware
 load_dotenv()
 
 logging.basicConfig(level=logging.INFO)
 #logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
+
+# Remove any proxy settings so the SDK won’t pass them to httpx.Client
+for proxy_var in ("HTTP_PROXY", "HTTPS_PROXY", "http_proxy", "https_proxy"):
+    os.environ.pop(proxy_var, None)
+
 
 openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 chroma_client = chromadb.PersistentClient(path="./chroma_db")
@@ -89,7 +95,7 @@ def initialize_collections():
                 metadatas=tds_metas,
                 ids=tds_ids
             )
-            logger.info(f"✅ Indexed {len(tds_docs)} TDS documents")
+            logger.info(f"Indexed {len(tds_docs)} TDS documents")
 
         # Load and process Discourse data
         discourse_docs, discourse_metas, discourse_ids = [], [], []
@@ -134,12 +140,12 @@ def initialize_collections():
                     metadatas=discourse_metas[i:i+batch_size],
                     ids=discourse_ids[i:i+batch_size]
                 )
-            logger.info(f"✅ Indexed {len(discourse_docs)} Discourse posts")
+            logger.info(f"Indexed {len(discourse_docs)} Discourse posts")
 
-        logger.info("📚 Data indexing completed successfully")
+        logger.info("Data indexing completed successfully")
     
     except Exception as e:
-        logger.error(f"❌ Initialization error: {str(e)}")
+        logger.error(f"Initialization error: {str(e)}")
         raise RuntimeError(f"Initialization failed: {str(e)}")
 
 def analyze_image(base64_image: str) -> str:
@@ -157,7 +163,7 @@ def analyze_image(base64_image: str) -> str:
         )
         return response.choices[0].message.content
     except Exception as e:
-        logger.error(f"🖼️ Image analysis error: {str(e)}")
+        logger.error(f"Image analysis error: {str(e)}")
         return ""
 
 def retrieve_context(query: str, max_results: int = 5) -> tuple:
@@ -208,7 +214,7 @@ async def startup_event():
     try:
         initialize_collections()
     except Exception as e:
-        logger.critical(f"🔥 Critical startup error: {str(e)}")
+        logger.critical(f"Critical startup error: {str(e)}")
         raise
 
 @app.get("/")
@@ -274,7 +280,7 @@ async def answer_question(request: QuestionRequest):
         return AnswerResponse(answer=answer, links=links)
     
     except Exception as e:
-        logger.error(f"❌ Query processing error: {str(e)}")
+        logger.error(f"Query processing error: {str(e)}")
         raise HTTPException(status_code=500, detail="Error processing request")
 
 @app.get("/status")
@@ -290,5 +296,5 @@ async def service_status():
         return {"status": "error", "message": str(e)}
 
 if __name__ == "__main__":
-    print("🚀 Starting TDS Virtual Teaching Assistant API...")
+    print("Starting TDS Virtual Teaching Assistant API...")
     uvicorn.run(app, host="0.0.0.0", port=8000, log_level="info")
